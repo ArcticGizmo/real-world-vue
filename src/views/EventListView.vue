@@ -27,7 +27,7 @@
 <script>
 import eventService from '@/services/eventService.js';
 import EventCard from '@/components/EventCard.vue';
-import { watchEffect } from 'vue';
+import NProgress from 'nprogress';
 
 const LIMIT = 2;
 
@@ -45,18 +45,35 @@ export default {
       totalEvents: 0,
     };
   },
-
-  created() {
-    watchEffect(() => {
-      this.events = null;
-      eventService
-        .getEvents(LIMIT, this.page)
-        .then(resp => {
-          this.events = resp.data;
-          this.totalEvents = resp.headers['x-total-count'];
-        })
-        .catch(() => this.$router.push({ name: 'network-error' }));
-    });
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    NProgress.start();
+    const page = parseInt(routeTo.query.page) || 1;
+    eventService
+      .getEvents(LIMIT, page)
+      .then(resp => {
+        next(vm => {
+          vm.events = resp.data;
+          vm.totalEvents = resp.headers['x-total-count'];
+        });
+      })
+      .catch(() => {
+        next({ name: 'network-error' });
+      })
+      .finally(() => NProgress.done());
+  },
+  beforeRouteUpdate(routeTo) {
+    NProgress.start();
+    const page = parseInt(routeTo.query.page) || 1;
+    eventService
+      .getEvents(LIMIT, page)
+      .then(resp => {
+        this.events = resp.data;
+        this.totalEvents = resp.headers['x-total-count'];
+      })
+      .catch(() => {
+        return { name: 'network-error' };
+      })
+      .finally(() => NProgress.done());
   },
   computed: {
     hasNextPage() {
