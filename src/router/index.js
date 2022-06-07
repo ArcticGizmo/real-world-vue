@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import EventView from '@/views/EventView.vue';
+import EventListView from '@/views/EventListView.vue';
 import EventDetailsView from '@/views/EventDetailsView.vue';
 
 const routes = [
   {
     path: '/',
     name: 'event-list',
-    component: EventView,
+    component: EventListView,
+    props: r => ({ page: parseInt(r.query.page, 10) || 1 }),
   },
   {
     path: '/event/:id',
