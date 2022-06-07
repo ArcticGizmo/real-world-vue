@@ -4,6 +4,8 @@ import EventLayout from '@/views/event/Layout.vue';
 import EventDetails from '@/views/event/Details.vue';
 import EventRegister from '@/views/event/Register.vue';
 import EventEdit from '@/views/event/Edit.vue';
+import NotFound from '@/views/NotFound.vue';
+import NetworkError from '@/views/NetworkError.vue';
 
 const routes = [
   {
@@ -47,6 +49,22 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'not-found',
+    component: NotFound,
+  },
+  {
+    path: '/404/:resource',
+    name: '404-resource',
+    component: NotFound,
+    props: true,
+  },
+  {
+    path: '/network-error',
+    name: 'network-error',
+    component: NetworkError,
   },
 ];
 

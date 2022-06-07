@@ -28,7 +28,16 @@ export default {
     eventService
       .getEvent(this.id)
       .then(resp => (this.event = resp.data))
-      .catch(e => console.error(e));
+      .catch(e => {
+        if (e.response && e.response.status === 404) {
+          this.$router.push({
+            name: '404-resource',
+            params: { resource: 'event' },
+          });
+        } else {
+          this.$router.push({ name: 'network-error' });
+        }
+      });
   },
 };
 </script>

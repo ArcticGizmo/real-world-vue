@@ -55,7 +55,7 @@ export default {
           this.events = resp.data;
           this.totalEvents = resp.headers['x-total-count'];
         })
-        .catch(error => console.error(error));
+        .catch(() => this.$router.push({ name: 'network-error' }));
     });
   },
   computed: {
