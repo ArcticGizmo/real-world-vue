@@ -13,7 +13,7 @@ const routes = [
     props: r => ({ page: parseInt(r.query.page, 10) || 1 }),
   },
   {
-    path: '/event/:id',
+    path: '/events/:id',
     name: 'event-layout',
     props: true,
     component: EventLayout,
@@ -35,7 +35,11 @@ const routes = [
       },
     ],
   },
- 
+  {
+    path: '/event/:afterEvent(.*)',
+    // params are auto mapped
+    redirect: to => ({ path: '/events/' + to.params.afterEvent }),
+  },
   {
     path: '/about',
     name: 'about',
