@@ -37,11 +37,13 @@
 
       <button type="submit">Submit</button>
     </form>
+    <div>{{ $store.state.events }}</div>
   </div>
 </template>
 
 <script>
 import { v4 as uuid } from 'uuid';
+import eventService from '@/services/eventService';
 
 export default {
   data() {
@@ -69,9 +71,19 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.event.id = uuid();
-      this.event.organizer = this.$store.state.user;
-      console.log('Event:', this.event);
+      const event = {
+        ...this.event,
+        id: uuid(),
+        organizer: this.$store.state.user,
+      };
+      eventService
+        .postEvent(event)
+        .then(() => {
+          this.$store.commit('ADD_EVENT', event);
+        })
+        .catch(e => {
+          console.error(e);
+        });
     },
   },
 };
