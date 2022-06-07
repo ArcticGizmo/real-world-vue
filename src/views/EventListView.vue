@@ -27,7 +27,6 @@
 <script>
 import eventService from '@/services/eventService.js';
 import EventCard from '@/components/EventCard.vue';
-import NProgress from 'nprogress';
 
 const LIMIT = 2;
 
@@ -46,7 +45,6 @@ export default {
     };
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
-    NProgress.start();
     const page = parseInt(routeTo.query.page) || 1;
     eventService
       .getEvents(LIMIT, page)
@@ -58,13 +56,11 @@ export default {
       })
       .catch(() => {
         next({ name: 'network-error' });
-      })
-      .finally(() => NProgress.done());
+      });
   },
   beforeRouteUpdate(routeTo) {
-    NProgress.start();
     const page = parseInt(routeTo.query.page) || 1;
-    eventService
+    return eventService
       .getEvents(LIMIT, page)
       .then(resp => {
         this.events = resp.data;
@@ -72,8 +68,7 @@ export default {
       })
       .catch(() => {
         return { name: 'network-error' };
-      })
-      .finally(() => NProgress.done());
+      });
   },
   computed: {
     hasNextPage() {
