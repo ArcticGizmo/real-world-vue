@@ -25,8 +25,10 @@
 </template>
 
 <script>
-import eventService from '@/services/eventService.js';
+import { mapState } from 'vuex';
 import EventCard from '@/components/EventCard.vue';
+
+import store from '@/store';
 
 const LIMIT = 2;
 
@@ -38,42 +40,25 @@ export default {
   components: {
     EventCard,
   },
-  data() {
-    return {
-      events: null,
-      totalEvents: 0,
-    };
-  },
-  beforeRouteEnter(routeTo, routeFrom, next) {
+  beforeRouteEnter(routeTo) {
     const page = parseInt(routeTo.query.page) || 1;
-    eventService
-      .getEvents(LIMIT, page)
-      .then(resp => {
-        next(vm => {
-          vm.events = resp.data;
-          vm.totalEvents = resp.headers['x-total-count'];
-        });
-      })
-      .catch(() => {
-        next({ name: 'network-error' });
-      });
+    return store.dispatch('fetchEvents', { perPage: LIMIT, page }).catch(() => {
+      return { name: 'network-error' };
+    });
   },
   beforeRouteUpdate(routeTo) {
     const page = parseInt(routeTo.query.page) || 1;
-    return eventService
-      .getEvents(LIMIT, page)
-      .then(resp => {
-        this.events = resp.data;
-        this.totalEvents = resp.headers['x-total-count'];
-      })
-      .catch(() => {
-        return { name: 'network-error' };
-      });
+    return store.dispatch('fetchEvents', { perPage: LIMIT, page }).catch(() => {
+      return { name: 'network-error' };
+    });
   },
   computed: {
+    ...mapState({
+      events: state => state.events,
+      totalEvents: state => state.totalEvents,
+    }),
     hasNextPage() {
       const totalPages = Math.ceil(this.totalEvents / LIMIT);
-
       return this.page < totalPages;
     },
   },

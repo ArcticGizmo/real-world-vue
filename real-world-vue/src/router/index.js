@@ -4,12 +4,13 @@ import EventLayout from '@/views/event/Layout.vue';
 import EventDetails from '@/views/event/Details.vue';
 import EventRegister from '@/views/event/Register.vue';
 import EventEdit from '@/views/event/Edit.vue';
+import EventCreate from '@/views/EventCreate.vue';
 import NotFound from '@/views/NotFound.vue';
 import NetworkError from '@/views/NetworkError.vue';
 
 import NProgress from 'nprogress';
 import eventService from '@/services/eventService';
-import GStore from '@/store';
+import GStore from '@/basicStore';
 
 const routes = [
   {
@@ -57,6 +58,11 @@ const routes = [
         component: EventEdit,
       },
     ],
+  },
+  {
+    path: '/event/create',
+    name: 'event-create',
+    component: EventCreate,
   },
   {
     path: '/event/:afterEvent(.*)',
