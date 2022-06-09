@@ -1,30 +1,38 @@
 <template>
-  <h1>Events for Good</h1>
+  <h1 data-testid="event-list-title">Events for Good</h1>
   <div class="events">
-    <EventCard v-for="event in events" :key="event.id" :event="event" />
+    <router-link
+      data-testid="event"
+      class="event-link"
+      v-for="event in events"
+      :key="event.id"
+      :to="{ name: 'EventDetails', params: { id: event.id } }"
+    >
+      <EventCard :event="event" />
+    </router-link>
   </div>
 </template>
 
 <script>
-import EventCard from '@/components/EventCard.vue'
+import EventCard from '@/components/EventCard.vue';
 export default {
   components: {
-    EventCard
+    EventCard,
   },
   created() {
     this.$store.dispatch('fetchEvents').catch(error => {
       this.$router.push({
         name: 'ErrorDisplay',
-        params: { error: error }
-      })
-    })
+        params: { error: error },
+      });
+    });
   },
   computed: {
     events() {
-      return this.$store.state.events
-    }
-  }
-}
+      return this.$store.state.events;
+    },
+  },
+};
 </script>
 
 <style scoped>

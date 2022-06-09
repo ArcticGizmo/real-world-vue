@@ -1,0 +1,23 @@
+{
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "extends": ["plugin:vue/vue3-essential", "eslint:recommended"],
+  "parserOptions": {
+    "parser": "@babel/eslint-parser"
+  },
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-undef": "error",
+    "eqeqeq": ["error", "smart"],
+    "vue/no-unused-components": "warn",
+    "vue/multi-word-component-names": "off"
+  },
+  "globals": {
+    "module": "readonly",
+    "require": "readonly",
+    "defineProps": "readonly",
+    "defineEmits": "readonly"
+  }
+}
